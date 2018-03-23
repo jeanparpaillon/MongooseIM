@@ -383,7 +383,9 @@ disco_rooms_rsm(Config) ->
 rooms_in_rosters(Config) ->
     escalus:story(Config, [{alice, 1}], fun(Alice) ->
             escalus:send(Alice, escalus_stanza:roster_get()),
-            RosterResult = escalus:wait_for_stanza(Alice),
+            RosterResultSet = escalus:wait_for_stanzas(Alice, 3),
+            ct:pal("RosterResultSet: ~p", [RosterResultSet]),
+            RosterResult = hd(RosterResultSet),
             escalus_assert:is_roster_result(RosterResult),
 
             [Item] = exml_query:paths(
